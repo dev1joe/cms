@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function Home() {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -16,6 +17,10 @@ export default function Home() {
         setIsAdmin(true);
       }
     });
+
+    if (session && !session.user.emailVerified) {
+      toast.warning("your email is not verified");
+    }
   }, []);
 
   if (loading) {
@@ -29,7 +34,7 @@ export default function Home() {
         <>
           <h1 className="text-4xl font-bold">Welcome to our App</h1>
           <Link href="/auth">
-            <Button size="lg">
+            <Button size="lg" className="cursor-pointer">
               Sign In / Sign Up
             </Button>
           </Link>

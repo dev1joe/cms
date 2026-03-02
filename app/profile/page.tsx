@@ -13,9 +13,35 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-export default async function ProfilePage() {
-    const session = await auth.api.getSession({ headers: await headers() });
+type searchParams = {
+    [key: string]: string | string[] | undefined
+}
 
+function getTab(params: searchParams): string | null {
+    let tab: string | null;
+    if (!params.tab) {
+        return null
+    } else {
+        const paramType = typeof (params.tab);
+        if (Array.isArray(params.tab) && params.tab.length > 0 && paramType == "string") {
+            return params.tab[0];
+        } else if (!Array.isArray(params.tab) && paramType == "string") {
+            return params.tab;
+        }
+        return null;
+    }
+}
+
+export default async function ProfilePage({
+    searchParams
+}: {
+    searchParams: Promise<searchParams>
+}) {
+    const params = await searchParams;
+    const tab = getTab(params);
+    console.log(`tab: ${tab}`);
+
+    const session = await auth.api.getSession({ headers: await headers() });
     if (session == null) {
         return redirect("/auth");
     }
@@ -53,27 +79,37 @@ export default async function ProfilePage() {
                 </div>
             </div>
 
-            <Tabs defaultValue="profile">
+            <Tabs defaultValue="profile" value={tab || "profile"} >
                 <TabsList className="w-full grid grid-cols-5 **:cursor-pointer">
                     <TabsTrigger value="profile">
-                        <User />
-                        <span className="hidden sm:inline">Profile</span>
+                        <Link href="/profile" className="w-full flex justify-center gap-1" replace>
+                            <User />
+                            <span className="hidden sm:inline">Profile</span>
+                        </Link>
                     </TabsTrigger>
                     <TabsTrigger value="security">
-                        <Shield />
-                        <span className="hidden sm:inline">Security</span>
+                        <Link href="?tab=security" className="w-full flex justify-center gap-1" replace>
+                            <Shield />
+                            <span className="hidden sm:inline">Security</span>
+                        </Link>
                     </TabsTrigger>
                     <TabsTrigger value="sessions">
-                        <Key />
-                        <span className="hidden sm:inline">Sessions</span>
+                        <Link href="?tab=sessions" className="w-full flex justify-center gap-1" replace>
+                            <Key />
+                            <span className="hidden sm:inline">Sessions</span>
+                        </Link>
                     </TabsTrigger>
                     <TabsTrigger value="accounts">
-                        <LinkIcon />
-                        <span className="hidden sm:inline">Accounts</span>
+                        <Link href="?tab=accounts" className="w-full flex justify-center gap-1" replace>
+                            <LinkIcon />
+                            <span className="hidden sm:inline">Accounts</span>
+                        </Link>
                     </TabsTrigger>
                     <TabsTrigger value="danger">
-                        <Trash2 />
-                        <span className="hidden sm:inline">Danger</span>
+                        <Link href="?tab=danger" className="w-full flex justify-center gap-1" replace>
+                            <Trash2 />
+                            <span className="hidden sm:inline">Danger</span>
+                        </Link>
                     </TabsTrigger>
                 </TabsList>
 
@@ -86,7 +122,11 @@ export default async function ProfilePage() {
                 </TabsContent>
 
                 <TabsContent value="security">
-                    {session && <SecurityTab email={session?.user.email} isTwoFactorEnabled={session.user.twoFactorEnabled ?? false} />}
+                    {session && <SecurityTab
+                        email={session.user.email}
+                        isTwoFactorEnabled={session.user.twoFactorEnabled ?? false}
+                        isEmailVerified={session.user.emailVerified}
+                    />}
                 </TabsContent>
 
                 <TabsContent value="sessions">

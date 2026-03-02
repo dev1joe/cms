@@ -2,7 +2,6 @@
 import { ForgotPasswordTab } from "@/app/auth/_components/ForgotPasswordTab";
 import { SignInTab } from "@/app/auth/_components/SignInTab";
 import { SignUpTab } from "@/app/auth/_components/SignUpTab";
-import { VerificationTab } from "@/app/auth/_components/VerificationTab";
 import { SocialAuthButtons } from "@/app/auth/_components/SocialAuthButtons";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -18,6 +17,7 @@ export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [selectedTab, setSelectedTab] = useState("signin");
 
+    // TODO: maybe use a proxy instead ??
     useEffect(() => {
         authClient.getSession().then((session) => {
             if (session.data != null) router.push("/");
@@ -41,6 +41,8 @@ export default function LoginPage() {
                     <TabsList className="**:cursor-pointer">
                         <TabsTrigger value="signin" onClick={() => setSelectedTab('signin')}>Sign In</TabsTrigger>
                         <TabsTrigger value="signup" onClick={() => setSelectedTab('signup')}>Sign Up</TabsTrigger>
+
+                        {/* <TabsTrigger value="forgot-password" onClick={() => setSelectedTab('forgot-password')}>Forgot Password</TabsTrigger> */}
                     </TabsList>
                 }
 
@@ -78,17 +80,6 @@ export default function LoginPage() {
                         <CardFooter className="grid grid-cols-2 gap-3">
                             <SocialAuthButtons />
                         </CardFooter>
-                    </Card>
-                </TabsContent>
-
-                <TabsContent value="verification">
-                    <Card>
-                        <CardHeader className="text-2xl font-bold">
-                            <CardTitle>Email Verification</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <VerificationTab email={email}/>
-                        </CardContent>
                     </Card>
                 </TabsContent>
 

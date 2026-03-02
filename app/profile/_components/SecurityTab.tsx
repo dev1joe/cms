@@ -8,13 +8,18 @@ import { TwoFactorAuth } from "./TwoFactorAuth";
 import { Badge } from "@/components/ui/badge";
 import { Passkey } from "@better-auth/passkey";
 import { PasskeysManagement } from "./PasskeysManagement";
+import { NotVerifiedTab } from "./NotVerifiedTab";
+import { VerifiedTab } from "./VerifiedTab";
+import { ShieldCheck, TriangleAlert } from "lucide-react";
 
 export function SecurityTab({
     email: userEmail,
-    isTwoFactorEnabled
+    isTwoFactorEnabled,
+    isEmailVerified
 }: {
     email: string,
     isTwoFactorEnabled: boolean,
+    isEmailVerified: boolean
 }) {
     const [hasPasswordAccount, setHasPasswordAccount] = useState<boolean>(false);
     const [passkeys, setPasskeys] = useState<Array<Passkey> | null>(null);
@@ -29,11 +34,31 @@ export function SecurityTab({
             if (!keys.error) {
                 setPasskeys(keys.data);
             }
-        })
+        });
     }, [])
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 relative">
+            <div className="absolute right-12 top-5">
+                {isEmailVerified
+                ? <ShieldCheck className="size-24 lg:size-28 text-green-500" />
+                : <TriangleAlert className="size-28 text-yellow-500" />
+                }
+            </div>
+
+            <Card>
+                <CardHeader>
+                    <CardTitle>Email verification</CardTitle>
+                    <CardDescription>Essential for some core platform features.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    {isEmailVerified
+                        ? <VerifiedTab />
+                        : <NotVerifiedTab email={userEmail} />
+                    }
+                </CardContent>
+            </Card>
+
             {hasPasswordAccount ? (
                 <Card>
                     <CardHeader>
@@ -73,7 +98,7 @@ export function SecurityTab({
                     <CardTitle>Passkeys</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    {passkeys !== null && <PasskeysManagement passkeys={passkeys} />} 
+                    {passkeys !== null && <PasskeysManagement passkeys={passkeys} />}
                 </CardContent>
             </Card>
         </div>

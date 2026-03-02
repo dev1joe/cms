@@ -7,8 +7,10 @@ type VerificationTabProps = {
     email: string,
 }
 
-export function VerificationTab({ email }: VerificationTabProps) {
+export function NotVerifiedTab({ email }: VerificationTabProps) {
+    // using state for rerendering the UI
     const [countdown, setCountDown] = useState<number>(0);
+    // using ref for changing interval id without re-rendering the UI + immutable
     const interval = useRef<NodeJS.Timeout>(undefined);
 
     // TODO: there is an error when calling this function in the component scope, solve that
@@ -32,9 +34,14 @@ export function VerificationTab({ email }: VerificationTabProps) {
 
     return (
         <div>
-            <p className="mb-4">
-                We sent you a verification link. Please check your email and click the link to verify your account
-            </p>
+            <div className="mb-2 ">
+                <h2 className="text-lg md:text-xl mb-2">
+                    Your email is <span className="text-yellow-500 font-semibold">NOT</span> verified
+                </h2>
+                <p className="text-xs md:text-sm mb-2">
+                    Click to verify your account, we will email you a verification link.
+                </p>
+            </div>
 
             <BetterAuthActionButton
                 className="cursor-pointer w-full"

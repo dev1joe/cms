@@ -43,11 +43,19 @@ export default function Home() {
         <>
           <h1 className="text-4xl font-bold">Welcome {session.user.name}</h1>
 
+          {/*  TODO: maybe move all these buttons to a navabr */}
           <div className="flex gap-4 justify-center">
             {/* Profile Button */}
             <Link href="/profile">
               <Button size='lg' className="cursor-pointer">
                 Profile
+              </Button>
+            </Link>
+
+            {/* Dashboard Button */}
+            <Link href="/dashboard">
+              <Button size='lg' className="cursor-pointer">
+                Dashboard
               </Button>
             </Link>
 

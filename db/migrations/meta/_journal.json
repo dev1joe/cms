@@ -36,6 +36,27 @@
       "when": 1770574833479,
       "tag": "0004_breezy_mongu",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1772229367261,
+      "tag": "0005_handy_purifiers",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1772229554820,
+      "tag": "0006_magical_magus",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1772656900572,
+      "tag": "0007_confused_reavers",
+      "breakpoints": true
     }
   ]
 }

@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/card";
 import { ProductCardDropDown } from "./ProductCardDropDown";
 import { Product } from "@/db/schema";
+import { Badge } from "@/components/ui/badge";
 
 export function ProductCard({ product }: { product: Product }) {
   return (
@@ -19,10 +20,16 @@ export function ProductCard({ product }: { product: Product }) {
       />
       <CardHeader>
         <CardAction>
-          <ProductCardDropDown isHidden={product.hidden || false} />
+          <ProductCardDropDown productId={product.id} isHidden={product.hidden || false} />
         </CardAction>
         <CardTitle>{product.name}</CardTitle>
         <CardDescription>{product.description}</CardDescription>
+
+        {product.hidden && (
+          <Badge variant="secondary" >
+            Hidden
+          </Badge>
+        )}
       </CardHeader>
       {/* <CardFooter>
         <Button className="w-full">View Event</Button>

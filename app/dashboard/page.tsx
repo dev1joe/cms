@@ -15,7 +15,7 @@ export default function DashboardLayout() {
   const [refreshSignal, setRefreshSignal] = useState(0);
   const router = useRouter();
 
-  // TODO: use skeleton
+  // TODO: use skeleton when the dashboadr is complete
   if (isLoading) {
     return (<div>loading...</div>);
   }

@@ -8,15 +8,32 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { toast } from "sonner";
+
+type DropDownProps = {
+  productId: number,
+  isHidden: boolean,
+}
 
 // TODO: handle hide VS show buttons
 // TODO: activate the buttons, what is the most optimal way ??
-export function ProductCardDropDown({ isHidden }: { isHidden: boolean }) {
-  function handleHideProduct() {
-
-  }
-  function handleUnhideProduct() {
-
+export function ProductCardDropDown({
+  productId,
+  isHidden
+}: DropDownProps
+) {
+  function handleToggleVisibility() {
+    fetch(
+      `/api/products/${productId}/toggle-visibility`,
+      { method: "POST" }
+    ).then(response => {
+      if (!response.ok) {
+        toast.error("error toggling visibility");
+        // TODO: how to refresh the products list ??
+      } else {
+        toast.success("visbility toggled");
+      }
+    })
   }
 
   return (
@@ -38,8 +55,8 @@ export function ProductCardDropDown({ isHidden }: { isHidden: boolean }) {
             Open
           </DropdownMenuItem>
           {isHidden
-            ? <DropdownMenuItem className="cursor-pointer"><EyeIcon />Show</DropdownMenuItem>
-            : <DropdownMenuItem className="cursor-pointer"><EyeOffIcon />Hide</DropdownMenuItem>
+            ? <DropdownMenuItem className="cursor-pointer" onClick={handleToggleVisibility}><EyeIcon />Show</DropdownMenuItem>
+            : <DropdownMenuItem className="cursor-pointer" onClick={handleToggleVisibility}><EyeOffIcon />Hide</DropdownMenuItem>
           }
           <DropdownMenuItem className="cursor-pointer">
             <PencilIcon />

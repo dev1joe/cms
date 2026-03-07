@@ -42,3 +42,8 @@
 - [ ] loading indicator from 2fa form stays visible for a very long time
 - [ ] messages/prerender-errors error in reset-password.tsx page
 - [ ] send verification email page countdown
+
+## Learning - Models/Resoures Types
+- use insertSchema and updateSchema from drizzle-zod + xss library when receiving information from users and you want to validate it (gate keeping)
+- use InferSelectModel from drizzle when you want to reference the structure (type) of the model/resource
+

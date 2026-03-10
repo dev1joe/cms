@@ -1,3 +1,4 @@
+import { ApiResponseHandler } from "@/lib/http/ApiResponseHandler";
 import { productInsertSchema } from "@/schemes/products.schema";
 import { createProduct, getProducts } from "@/services/products.service";
 import { NextRequest, NextResponse } from "next/server";
@@ -6,7 +7,14 @@ import { ZodError } from "zod";
 export async function GET() {
   try {
     const products = await getProducts();
-    return NextResponse.json({ result: products }, { status: 200 })
+
+    return NextResponse.json(
+      ApiResponseHandler.success(
+        "Products fetched successfully",
+        products
+      ),
+      { status: 200 }
+    );
   } catch (e: unknown) {
     console.log("error:", e);
     return NextResponse.json({ error: e }, { status: 500 });

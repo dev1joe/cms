@@ -7,8 +7,11 @@ import { Button } from "@/components/ui/button";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { Textarea } from "@/components/ui/textarea";
 import { Product } from "@/db/schema";
-import { productInsert, productInsertSchema } from "@/schemes/products.schema";
+import { productInsert, productInsertSchema, productUpdate } from "@/schemes/products.schema";
 import { toast } from "sonner";
+import useSWR from 'swr';
+import { ApiResponseBody } from '@/lib/http/types';
+import { useProduct } from '@/hooks/useProduct';
 
 // const createProductSchema = z.object({
 //   name: z.string().min(1),
@@ -21,24 +24,22 @@ type formProps = {
   userId: string,
   product?: Product,
   closeDialog: () => void,
-  onSuccess: () => void
 }
 
 export function CreateProductForm({
   userId,
   product,
   closeDialog,
-  onSuccess,
 }: formProps
 ) {
-  // console.log("userId", userId);
+  const { mutate } = useProduct();  // console.log("userId", userId);
 
   const form = useForm<productInsert>({
     resolver: zodResolver(productInsertSchema),
     defaultValues: {
       userId: userId,
-      name: "",
-      description: "",
+      name: product?.name || "",
+      description: product?.description || "",
     }
   });
 
@@ -61,15 +62,31 @@ export function CreateProductForm({
       toast.success("Product Created successfully");
       closeDialog();
       form.reset();
-      onSuccess();
+      // onSuccess();
+      mutate();
     }
   }
 
   // TODO: implement function
-  async function handleProductUpdate(data: productInsert) {
+  async function handleProductUpdate(data: productUpdate) {
     console.log("submitted data", data);
-    closeDialog();
-    form.reset();
+
+    const response = await fetch(`/api/products/${product?.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      toast.error("Failed to update product");
+      console.log("response", response)
+      // TODO: check for validation errors, if any, use the "setErrors" function from react-hook-form
+    } else {
+      toast.success("Product updated successfully");
+      closeDialog();
+      form.reset();
+      mutate();
+    }
   }
 
   return (
@@ -87,7 +104,7 @@ export function CreateProductForm({
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input type="text" {...field} value={userId} hidden />
+                <Input type="text" {...field} hidden />
               </FormControl>
             </FormItem>
           )}
@@ -100,7 +117,7 @@ export function CreateProductForm({
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input type="text" {...field} value={product?.name} />
+                <Input type="text" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -114,25 +131,37 @@ export function CreateProductForm({
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Textarea {...field} value={product?.description} />
+                <Textarea {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full cursor-pointer"
-          size={'lg'}
-        >
-          <LoadingSwap isLoading={isSubmitting}>
-            {product
-              ? "Update Product"
-              : "Create Product"
-            }
-          </LoadingSwap>
-        </Button>
+        <div className='flex gap-2'>
+
+          <Button
+            type="button"
+            variant="outline"
+            size="lg"
+            className="flex-1 cursor-pointer"
+            onClick={closeDialog}
+          >
+            Close
+          </Button>
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            className="flex-1 cursor-pointer"
+            size={'lg'}
+          >
+            <LoadingSwap isLoading={isSubmitting}>
+              {product
+                ? "Update Product"
+                : "Create Product"
+              }
+            </LoadingSwap>
+          </Button>
+        </div>
       </form>
     </Form>
   )

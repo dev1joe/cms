@@ -9,6 +9,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { toast } from "sonner";
+import { useProduct } from "@/hooks/useProduct";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogTitle, AlertDialogTrigger } from "@radix-ui/react-alert-dialog";
 
 type DropDownProps = {
   productId: number,
@@ -22,6 +24,9 @@ export function ProductCardDropDown({
   isHidden
 }: DropDownProps
 ) {
+
+  const { mutate } = useProduct();
+
   function handleToggleVisibility() {
     fetch(
       `/api/products/${productId}/toggle-visibility`,
@@ -29,9 +34,23 @@ export function ProductCardDropDown({
     ).then(response => {
       if (!response.ok) {
         toast.error("error toggling visibility");
-        // TODO: how to refresh the products list ??
       } else {
         toast.success("visbility toggled");
+        mutate();
+      }
+    })
+  }
+
+  function handleDeleteProduct() {
+    fetch(
+      `/api/products/${productId}/toggle-visibility`,
+      { method: "POST" }
+    ).then(response => {
+      if (!response.ok) {
+        toast.error("error toggling visibility");
+      } else {
+        toast.success("visbility toggled");
+        mutate();
       }
     })
   }
@@ -64,9 +83,11 @@ export function ProductCardDropDown({
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="cursor-pointer" variant="destructive">
-          <TrashIcon />
-          Delete
+        <DropdownMenuItem className="cursor-pointer" variant="destructive" asChild>
+          <AlertDialogTrigger className="w-full">
+            <TrashIcon />
+            Delete
+          </AlertDialogTrigger>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

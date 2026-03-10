@@ -1,6 +1,6 @@
 import { getDB } from "@/db";
 import { products } from "@/db/schema";
-import { productInsert } from "@/schemes/products.schema";
+import { productInsert, productUpdate } from "@/schemes/products.schema";
 import { eq, sql } from "drizzle-orm";
 
 const db = getDB();
@@ -13,7 +13,7 @@ export async function createProduct(data: productInsert) {
   return await db?.insert(products).values(data).returning();
 }
 
-export async function updateProduct(id: number, data: productInsert) {
+export async function updateProduct(id: number, data: productUpdate) {
   // there is no need to update the updatedAt timestamp, check timestamps.ts
   return await db?.update(products).set(data).where(eq(products.id, id));
 }

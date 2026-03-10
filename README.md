@@ -47,3 +47,6 @@
 - use insertSchema and updateSchema from drizzle-zod + xss library when receiving information from users and you want to validate it (gate keeping)
 - use InferSelectModel from drizzle when you want to reference the structure (type) of the model/resource
 
+
+
+trying out SWR from vercel; applied a fixed structure for API responses

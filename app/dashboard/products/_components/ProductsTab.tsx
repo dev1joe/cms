@@ -1,16 +1,16 @@
 "use client";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { ProductCard } from "./ProductCard";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useProduct } from "@/hooks/useProduct";
-import { CreateProductForm } from "./CreateProductForm";
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { useProduct } from "@/hooks/useProduct";
+import { ProductCard } from "./ProductCard";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
+import { CreateProductForm } from "./CreateProductForm";
 
-export function ProductsTab({ userId }: { userId: string }) {
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+export function ProductsTab({
+  userId,
+}: {
+  userId: string,
+}) {
   const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
 
   const {
@@ -21,7 +21,13 @@ export function ProductsTab({ userId }: { userId: string }) {
 
   if (isLoading) {
     return (
-      <Skeleton className="aspect-video w-full" />
+      <div className="px-4 lg:px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-3">
+          {Array.from({ length: 6 }).map((_: unknown, idx: number) => (
+            <Skeleton key={idx} className="aspect-square" />
+          ))}
+        </div>
+      </div>
     );
   }
 
@@ -46,48 +52,23 @@ export function ProductsTab({ userId }: { userId: string }) {
   console.log("data: ", data)
 
   return (
-    <div className="px-4 lg:px-6">
-      <div className="mb-3 flex gap-3">
-        <Input placeholder="Search..." />
-        <Dialog open={isCreateDialogOpen} onOpenChange={(open) => setIsCreateDialogOpen(open)}>
-          <DialogTrigger asChild>
-            <Button className="outline-none cursor-pointer">
-              <Plus />
-              <span className="hidden lg:inline">Create</span>
-            </Button>
-          </DialogTrigger>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-3">
+      {data.result.map((prod, idx) => (
+        <Dialog key={idx} open={isUpdateDialogOpen} onOpenChange={isOpen => setIsUpdateDialogOpen(isOpen)}>
+          <ProductCard product={prod} />
+
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Create new product</DialogTitle>
+              <DialogTitle>Update product</DialogTitle>
             </DialogHeader>
-
             <CreateProductForm
-              closeDialog={() => setIsCreateDialogOpen(false)}
               userId={userId}
+              product={prod}
+              closeDialog={() => setIsUpdateDialogOpen(false)}
             />
-
           </DialogContent>
         </Dialog>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-3">
-        {data.result.map((prod, idx) => (
-          <Dialog key={idx} open={isUpdateDialogOpen} onOpenChange={isOpen => setIsUpdateDialogOpen(isOpen)}>
-            <ProductCard product={prod} />
-
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Update product</DialogTitle>
-              </DialogHeader>
-              <CreateProductForm
-                userId={userId}
-                product={prod}
-                closeDialog={() => setIsUpdateDialogOpen(false)}
-              />
-            </DialogContent>
-          </Dialog>
-        ))}
-      </div>
+      ))}
     </div>
   );
 }

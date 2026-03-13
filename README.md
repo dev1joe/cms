@@ -47,6 +47,8 @@
 - use insertSchema and updateSchema from drizzle-zod + xss library when receiving information from users and you want to validate it (gate keeping)
 - use InferSelectModel from drizzle when you want to reference the structure (type) of the model/resource
 
-
-
-trying out SWR from vercel; applied a fixed structure for API responses
+## Auth - understanding better-auth session caching
+- [cluade conversation](https://claude.ai/share/4cb8c584-6c7c-4c5b-aa32-aead45ef264d)
+- [Better-Auth docs: Session Caching](https://better-auth.com/docs/concepts/session-management#session-caching)
+- Basically when caching is enabled, and when `useSession` or `getSession` are used, the browser sends the session data to the server for it to be encrypted and validated against the old signaturetn
+- so instead of doing that in multiple components in the same page, why not just fixate the session in each page using context and only run revalidation on page refresh or page change

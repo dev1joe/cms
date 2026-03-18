@@ -1,27 +1,27 @@
 "use client";
 import { SUPPORTED_OAUTH_PROVIDERS, SUPPORTED_OAUTH_PROVIDERS_DETAILS } from "@/lib/OAuthProviders";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 import { BetterAuthActionButton } from "../../../components/auth/BetterAuthActionButton";
 
 export function SocialAuthButtons() {
-    return SUPPORTED_OAUTH_PROVIDERS.map((provider) => {
-        const Icon = SUPPORTED_OAUTH_PROVIDERS_DETAILS[provider].Icon;
+  return SUPPORTED_OAUTH_PROVIDERS.map((provider) => {
+    const Icon = SUPPORTED_OAUTH_PROVIDERS_DETAILS[provider].Icon;
 
-        return (
-            <BetterAuthActionButton
-                key={provider}
-                variant={'outline'}
-                className="cursor-pointer"
-                action={() => {
-                    return authClient.signIn.social({
-                        provider,
-                        callbackURL: "/"
-                    })
-                }}
-            >
-                <Icon />
-                {SUPPORTED_OAUTH_PROVIDERS_DETAILS[provider].name}
-            </BetterAuthActionButton>
-        );
-    })
+    return (
+      <BetterAuthActionButton
+        key={provider}
+        variant={'outline'}
+        className="cursor-pointer"
+        action={() => {
+          return authClient.signIn.social({
+            provider,
+            callbackURL: "/"
+          })
+        }}
+      >
+        <Icon />
+        {SUPPORTED_OAUTH_PROVIDERS_DETAILS[provider].name}
+      </BetterAuthActionButton>
+    );
+  })
 }

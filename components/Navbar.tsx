@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { IconCreditCard, IconDashboard, IconInnerShadowTop, IconLogout, IconNotification, IconUserCircle, IconUsers } from "@tabler/icons-react";
 import Link from "next/link";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/auth-client";
 import { useEffect, useState } from "react";
 import { Skeleton } from "./ui/skeleton";
 import { Button } from "./ui/button";

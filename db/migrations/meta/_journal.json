@@ -57,6 +57,13 @@
       "when": 1772656900572,
       "tag": "0007_confused_reavers",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1773875166951,
+      "tag": "0008_slow_pandemic",
+      "breakpoints": true
     }
   ]
 }

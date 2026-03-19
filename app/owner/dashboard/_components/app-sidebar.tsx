@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import {
+  IconAnkh,
   IconCamera,
   IconChartBar,
   IconDashboard,
@@ -33,6 +34,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { DropdownMenu } from "radix-ui"
+import { DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { AudioWaveform, Command, GalleryVerticalEnd } from "lucide-react"
+import { StoreSwitcher } from "./StoreSwitcher"
 
 const data = {
   user: {
@@ -43,24 +48,29 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/dashboard",
+      url: "/",
       icon: IconDashboard,
     },
+    {
+      title: "Products",
+      url: "/products",
+      icon: IconShoppingCart,
+    },
+    {
+      title: "Analytics",
+      url: "/analytics",
+      icon: IconChartBar,
+    },
+    {
+      title: "Members",
+      url: "/members",
+      icon: IconUsers
+    }
     // {
     //   title: "Lifecycle",
     //   url: "#",
     //   icon: IconListDetails,
     // },
-    {
-      title: "Products",
-      url: "/dashboard/products",
-      icon: IconShoppingCart,
-    },
-    {
-      title: "Analytics",
-      url: "/dashboard/analytics",
-      icon: IconChartBar,
-    },
     // {
     //   title: "Projects",
     //   url: "#",
@@ -156,6 +166,24 @@ const data = {
   ],
 }
 
+const stores = [
+  {
+    name: "Acme Inc",
+    logo: GalleryVerticalEnd,
+    plan: "Enterprise",
+  },
+  {
+    name: "Acme Corp.",
+    logo: AudioWaveform,
+    plan: "Startup",
+  },
+  {
+    name: "Evil Corp.",
+    logo: Command,
+    plan: "Free",
+  },
+]
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
@@ -167,12 +195,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               className="data-[slot=sidebar-menu-button]:p-1.5!"
             >
               <a href="/">
-                <IconInnerShadowTop className="size-5!" />
-                <span className="text-base font-semibold">Acme Inc.</span>
+                <IconAnkh className="size-5!" />
+                <span className="text-base font-semibold">OZYRA Inc.</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
+
+        <StoreSwitcher stores={stores} />
+
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />

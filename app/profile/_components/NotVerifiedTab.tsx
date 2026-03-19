@@ -52,7 +52,7 @@ export function NotVerifiedTab({ email }: VerificationTabProps) {
           startEmailVerificationCountdown()
           return authClient.sendVerificationEmail({
             email: email,
-            callbackURL: "/"
+            callbackURL: "/profile?tab=security"
           });
         }}>{(countdown > 0)
           ? `Verify Email (${countdown})`

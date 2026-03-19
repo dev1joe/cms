@@ -1,3 +1,4 @@
+import { USER_TYPES } from "@/lib/auth/types";
 import { relations } from "drizzle-orm";
 import {
   pgTable,
@@ -7,7 +8,10 @@ import {
   integer,
   index,
   uniqueIndex,
+  pgEnum
 } from "drizzle-orm/pg-core";
+
+export const userTypeEnum = pgEnum("user_type", USER_TYPES);
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -21,6 +25,7 @@ export const user = pgTable("user", {
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
   twoFactorEnabled: boolean("two_factor_enabled").default(false),
+  type: userTypeEnum("type").notNull().default("customer"),
   role: text("role"),
   banned: boolean("banned").default(false),
   banReason: text("ban_reason"),

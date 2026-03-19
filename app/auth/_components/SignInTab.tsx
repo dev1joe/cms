@@ -13,10 +13,8 @@ import { PasswordInput } from '../../../components/ui/password-input';
 import { PasskeysButton } from '@/app/auth/_components/PasskeysButton';
 
 export function SignInTab({
-  openVerificationTab,
   openForgotPasswordTab,
 }: {
-  openVerificationTab: (email: string) => void
   openForgotPasswordTab: () => void
 }) {
   const router = useRouter();
@@ -42,9 +40,9 @@ export function SignInTab({
     await authClient.signIn.email({ ...data }, {
       onError: (error) => {
         console.log(error);
-        if (error.error.code == "EMAIL_NOT_VERIFIED") {
-          openVerificationTab(data.email)
-        }
+        // if (error.error.code == "EMAIL_NOT_VERIFIED") {
+        //   openVerificationTab(data.email)
+        // }
         toast.error(error.error.message || "Failed to sign in");
       },
       onSuccess: () => {

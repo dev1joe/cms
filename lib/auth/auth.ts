@@ -7,6 +7,7 @@ import { sendDeleteAccountVerification, sendOrganizationInviteEmail, sendResetPa
 import { createAuthMiddleware } from "better-auth/api";
 import { admin, organization, twoFactor } from 'better-auth/plugins';
 import { passkey } from '@better-auth/passkey'
+import { UserType } from "./types";
 
 const db = getDB();
 
@@ -27,6 +28,13 @@ export const auth = betterAuth({
       enabled: true,
       sendDeleteAccountVerification: async ({ user, url }) => {
         await sendDeleteAccountVerification(user, url);
+      }
+    },
+    additionalFields: {
+      type: {
+        type: "string",
+        defaultValue: "customer" satisfies UserType,
+        required: true,
       }
     }
   },

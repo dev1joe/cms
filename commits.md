@@ -1,0 +1,1 @@
+feat: allow auth-client to infer server additional fields; renamed accounts tab to connections tab in profile page; added user type to user row in admin page; added navbar to admin & profile pages; to-owner API endpoint;

@@ -105,6 +105,11 @@ export function UserRow({ user, selfId }: {
           {user.role}
         </Badge>
       </TableCell>
+      <TableCell>
+        <Badge variant={user.type === "owner" ? "default" : "secondary"}>
+          {user.type}
+        </Badge>
+      </TableCell>
       <TableCell>{new Date(user.createdAt).toLocaleDateString()}</TableCell>
       <TableCell>
         {!isSelf && (

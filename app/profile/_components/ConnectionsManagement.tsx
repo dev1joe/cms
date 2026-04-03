@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 
 type Account = Awaited<ReturnType<typeof auth.api.listUserAccounts>>[number];
 
-export function AccountsManagement() {
+export function ConnectionsManagement() {
   const [accounts, setAccounts] = useState<Account[]>([]);
 
   useEffect(() => {
@@ -129,7 +129,7 @@ function UnlinkedAccountCard({ providerName }: { providerName: string }) {
           className="cursor-pointer"
         >
           <Plus />
-          link
+          connect
         </BetterAuthActionButton>
       </CardContent>
     </Card>

@@ -38,13 +38,10 @@ import { DropdownMenu } from "radix-ui"
 import { DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { AudioWaveform, Command, GalleryVerticalEnd } from "lucide-react"
 import { StoreSwitcher } from "./StoreSwitcher"
+import { useSession } from "../../../../context/sessionContext"
+import { useRouter } from "next/navigation"
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   navMain: [
     {
       title: "Dashboard",
@@ -172,6 +169,9 @@ const stores = [
     logo: GalleryVerticalEnd,
     plan: "Enterprise",
   },
+]
+
+const otherStores = [
   {
     name: "Acme Corp.",
     logo: AudioWaveform,
@@ -185,6 +185,18 @@ const stores = [
 ]
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { session } = useSession();
+
+  if (session == null) {
+    return null;
+  }
+
+  const userData = {
+    name: session.user.name,
+    email: session.user.email,
+    avatar: "/avatars/shadcn.jpg",
+  }
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -202,7 +214,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenuItem>
         </SidebarMenu>
 
-        <StoreSwitcher stores={stores} />
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <StoreSwitcher stores={stores} otherStores={otherStores} />
+          </SidebarMenuItem>
+        </SidebarMenu>
 
       </SidebarHeader>
       <SidebarContent>
@@ -211,7 +227,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={userData} />
       </SidebarFooter>
     </Sidebar>
   )

@@ -52,3 +52,10 @@
 - [Better-Auth docs: Session Caching](https://better-auth.com/docs/concepts/session-management#session-caching)
 - Basically when caching is enabled, and when `useSession` or `getSession` are used, the browser sends the session data to the server for it to be encrypted and validated against the old signaturetn
 - so instead of doing that in multiple components in the same page, why not just fixate the session in each page using context and only run revalidation on page refresh or page change
+
+## why better-auth separates client and server ? 
+- better-auth intentionally separates client and server to support environments where the client bundle shouldn't import server-side code (DB connections, secrets, etc.). The `inferAdditionalFields` plugin bridges the type gap without importing any actual server logic — it only imports the type of your auth instance, so nothing leaks into the client bundle.
+
+## user APIs, do I include them in better-auth APIs
+- no because they are considered business-logic
+- better-auth APIs are for Authentication concerns, session, sign-in, sign-out, etc..

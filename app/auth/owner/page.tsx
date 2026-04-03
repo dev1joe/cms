@@ -1,6 +1,11 @@
 "use client";
 import { AuthTabs } from "../_components/AuthTabs";
 
+/*
+ * currently this is just the regular sign up page
+ * later will need a different form where the business-owner will need to enter more details
+ * maybe their address, SSN ??
+ */
 export default function Page() {
   return (
     <div className="min-h-screen ">

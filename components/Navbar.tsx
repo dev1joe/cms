@@ -1,21 +1,24 @@
 "use client";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { IconCreditCard, IconDashboard, IconInnerShadowTop, IconLogout, IconNotification, IconUserCircle, IconUsers } from "@tabler/icons-react";
+import { IconAnkh, IconCreditCard, IconDashboard, IconLogout, IconNotification, IconUserCircle, IconUsers } from "@tabler/icons-react";
 import Link from "next/link";
 import { authClient } from "@/lib/auth/auth-client";
 import { useEffect, useState } from "react";
 import { Skeleton } from "./ui/skeleton";
 import { Button } from "./ui/button";
+import { UserType } from "@/lib/auth/types";
+import { ShieldUser } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function Navbar() {
   return (
-    <div className="w-full min-h-12 p-5 flex justify-between align center z-990 border-2 border-gray-500">
+    <div className="w-full min-h-12 p-5 flex justify-between align center z-990 border-2 border-b-gray-500">
       {/*  gourping logo and links */}
       <div className="flex gap-6">
         <Link href="/">
-          <IconInnerShadowTop className="size-5! inline me-1" />
-          <span className="text-base font-semibold">Acme Inc.</span>
+          <IconAnkh className="size-5! inline me-1" />
+          <span className="text-base font-semibold">OZYRA Inc.</span>
         </Link>
         <div className="flex gap-3">
           <Link href="/">link</Link>
@@ -32,6 +35,7 @@ export function Navbar() {
 function UserAvatar() {
   const { data: session, isPending: loading } = authClient.useSession()
   const [isAdmin, setIsAdmin] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     authClient.admin.hasPermission({ permission: { user: ['list'] } }).then((data) => {
@@ -57,6 +61,11 @@ function UserAvatar() {
     );
   }
 
+  function handleLogout() {
+    authClient.signOut();
+    router.push("/");
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="cursor-pointer">
@@ -76,9 +85,9 @@ function UserAvatar() {
               <AvatarFallback className="rounded-lg">CN</AvatarFallback>
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-medium">{"Jhon Doe"}</span>
+              <span className="truncate font-medium">{session.user.name}</span>
               <span className="truncate text-xs text-muted-foreground">
-                {"test@test.com"}
+                {session.user.email}
               </span>
             </div>
           </div>
@@ -96,12 +105,14 @@ function UserAvatar() {
           </DropdownMenuItem>
 
           {/* Dashboard Button */}
-          <DropdownMenuItem className="cursor-pointer" asChild>
-            <Link href="/dashboard">
-              <IconDashboard />
-              Dashboard
-            </Link>
-          </DropdownMenuItem>
+          {(session.user.type === "owner" as UserType) && (
+            <DropdownMenuItem className="cursor-pointer" asChild>
+              <Link href="/owner/dashboard">
+                <IconDashboard />
+                Dashboard
+              </Link>
+            </DropdownMenuItem>
+          )}
 
           {/* Organizations Button */}
           <DropdownMenuItem className="cursor-pointer" asChild>
@@ -115,6 +126,7 @@ function UserAvatar() {
           {isAdmin &&
             <DropdownMenuItem className="cursor-pointer" asChild>
               <Link href="/admin">
+                <ShieldUser />
                 Admin
               </Link>
             </DropdownMenuItem>
@@ -130,7 +142,7 @@ function UserAvatar() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem variant="destructive" className="cursor-pointer" onClick={() => authClient.signOut()}>
+        <DropdownMenuItem variant="destructive" className="cursor-pointer" onClick={handleLogout}>
           <IconLogout />
           Log out
         </DropdownMenuItem>

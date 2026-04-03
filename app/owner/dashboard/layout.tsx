@@ -5,28 +5,13 @@ import {
   SidebarInset,
   SidebarProvider,
 } from "@/components/ui/sidebar"
-import { authClient } from "@/lib/auth/auth-client";
-import { useRouter } from "next/navigation";
-import { DashboardContext } from "./context";
+import { SessionProvider } from "../../../context/sessionContext";
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode,
 }) {
-  const router = useRouter();
-  const { data: session, isPending } = authClient.useSession()
-
-  if (isPending) {
-    return (
-      <div>loading...</div>
-    );
-  }
-
-  if (!session) {
-    return router.push("/auth");
-  }
-
   return (
     <SidebarProvider
       style={
@@ -36,11 +21,11 @@ export default function DashboardLayout({
         } as React.CSSProperties
       }
     >
-      <AppSidebar variant="inset" />
-      <SidebarInset>
-        <SiteHeader />
+      <SessionProvider>
+        <AppSidebar variant="inset" />
+        <SidebarInset>
+          <SiteHeader />
 
-        <DashboardContext.Provider value={{ userId: session.user.id }}>
           {/* <!-- Layer 1: takes up all remaining space in the sidebar layout --> */}
           <div className="flex flex-1 flex-col">
 
@@ -53,8 +38,8 @@ export default function DashboardLayout({
               </div>
             </div>
           </div>
-        </DashboardContext.Provider>
-      </SidebarInset>
+        </SidebarInset>
+      </SessionProvider>
     </SidebarProvider>
   )
 }
